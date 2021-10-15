@@ -31,11 +31,8 @@ import UIKit
 final class TestRouter: Routing {
     let rootViewController: UIViewController
     init(rootViewController: UIViewController) {
-        defer {
-            rootViewController.routing(self)
-        }
-
         self.rootViewController = rootViewController
+        self.rootViewController.routing(self)
     }
 }
 
