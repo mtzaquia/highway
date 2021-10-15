@@ -1,6 +1,6 @@
 //
-//  HighwayTests.swift
-//
+//  Routing.swift
+//  
 //  Copyright (c) 2021 @mtzaquia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,14 +23,20 @@
 //
 
 
-import XCTest
-@testable import Highway
+import UIKit
+import SwiftUI
 
-final class HighwayTests: XCTestCase {
-    func testRouterInjection() throws {
-        let controller = TestController()
-        let router = TestRouter(rootViewController: controller)
+/// A protocol defining a type that can route the application to specific destinations.
+public protocol Routing: ObservableObject {
+    /// The type of the root view controller for this particular instance.
+    associatedtype Root: UIViewController
+    /// The root view controller for this particular instance, from which presentations should be performed.
+    var rootViewController: Root { get }
 
-        XCTAssertTrue(controller.testRouter === router)
-    }
+    /// The type declaring all available routes for this instance. Typically, this would be an `enum` with cases for each possible route you'd like to perform.
+    associatedtype Route
+
+    /// A function that will route the current context towards a specific path, or route.
+    /// - Parameter route:The route to be used for this particular action.
+    func go(to route: Route)
 }

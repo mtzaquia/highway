@@ -1,5 +1,5 @@
 //
-//  HighwayTests.swift
+//  NativeExtensions.swift
 //
 //  Copyright (c) 2021 @mtzaquia
 //
@@ -22,15 +22,28 @@
 //  SOFTWARE.
 //
 
+import OSLog
+import UIKit
 
-import XCTest
-@testable import Highway
+public extension UIViewController {
+    /// A chaining function to attach different ``Routing`` objects to this controller instance.
+    /// - Returns: `self` with the newly ``Routing`` attached to it.
+    @discardableResult
+    func routing<Router>(_ router: Router) -> Self where Router: Routing {
+        Logger.highway.info("Attached \(String(describing: router)) to \(String(describing: self)).")
+        routers[String(describing: Router.self)] = router
+        return self
+    }
+}
 
-final class HighwayTests: XCTestCase {
-    func testRouterInjection() throws {
-        let controller = TestController()
-        let router = TestRouter(rootViewController: controller)
-
-        XCTAssertTrue(controller.testRouter === router)
+extension UIViewController {
+    static var routersKey: UInt8 = 0
+    var routers: [String: AnyObject] {
+        get {
+            objc_getAssociatedObject(self, &UIViewController.routersKey) as? [String: AnyObject] ?? [String: AnyObject]()
+        }
+        set(newValue) {
+            objc_setAssociatedObject(self, &UIViewController.routersKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        }
     }
 }

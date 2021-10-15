@@ -1,5 +1,5 @@
 //
-//  HighwayTests.swift
+//  Logging.swift
 //
 //  Copyright (c) 2021 @mtzaquia
 //
@@ -22,15 +22,8 @@
 //  SOFTWARE.
 //
 
+import OSLog
 
-import XCTest
-@testable import Highway
-
-final class HighwayTests: XCTestCase {
-    func testRouterInjection() throws {
-        let controller = TestController()
-        let router = TestRouter(rootViewController: controller)
-
-        XCTAssertTrue(controller.testRouter === router)
-    }
+extension Logger {
+    static let highway = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Highway")
 }

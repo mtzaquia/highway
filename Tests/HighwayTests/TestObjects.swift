@@ -1,6 +1,6 @@
 //
-//  HighwayTests.swift
-//
+//  TestObjects.swift
+//  
 //  Copyright (c) 2021 @mtzaquia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,15 +22,39 @@
 //  SOFTWARE.
 //
 
+import Foundation
+import Highway
+import UIKit
 
-import XCTest
-@testable import Highway
+// MARK: - TestRouter
 
-final class HighwayTests: XCTestCase {
-    func testRouterInjection() throws {
-        let controller = TestController()
-        let router = TestRouter(rootViewController: controller)
+final class TestRouter: Routing {
+    let rootViewController: UIViewController
+    init(rootViewController: UIViewController) {
+        defer {
+            rootViewController.routing(self)
+        }
 
-        XCTAssertTrue(controller.testRouter === router)
+        self.rootViewController = rootViewController
     }
+}
+
+extension TestRouter {
+    enum Route {
+        case first
+        case second
+    }
+
+    func go(to route: Route) {
+        switch route {
+        case .first: print("First route!")
+        case .second: print("Second route!")
+        }
+    }
+}
+
+// MARK: - TestController
+
+final class TestController: UIViewController {
+    @Router var testRouter: TestRouter
 }
