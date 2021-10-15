@@ -26,12 +26,30 @@ import OSLog
 import UIKit
 
 public extension UIViewController {
-    /// A chaining function to attach different ``Routing`` objects to this controller instance.
+    /// A chaining function to attach different ``Routing`` objects to this controller instance, similar to ``environmentObject(_:)`` on `SwiftUI`.
     /// - Returns: `self` with the newly ``Routing`` attached to it.
     @discardableResult
     func routing<Router>(_ router: Router) -> Self where Router: Routing {
         Logger.highway.info("Attached \(String(describing: router)) to \(String(describing: self)).")
         routers[String(describing: Router.self)] = router
+        return self
+    }
+
+    /// Finds the top-most view controller in a given hierarchy, starting from `self`.
+    /// - Returns: The top-most view controller in the hierarchy, or `self`.
+    func topMostViewController() -> UIViewController {
+        if let presented = self.presentedViewController {
+            return presented.topMostViewController()
+        }
+
+        if let navigation = self as? UINavigationController {
+            return navigation.visibleViewController?.topMostViewController() ?? navigation
+        }
+
+        if let tab = self as? UITabBarController {
+            return tab.selectedViewController?.topMostViewController() ?? tab
+        }
+
         return self
     }
 }

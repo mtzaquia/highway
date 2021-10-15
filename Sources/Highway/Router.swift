@@ -25,13 +25,13 @@
 import OSLog
 import UIKit
 
-/// A property wrapper for fetching ``Routing`` instances attached to a given controller or controller hierarchy.
+/// A property wrapper for fetching ``Routing`` instances attached to a given controller or controller hierarchy. Similar to ``@EnvironemntObject`` on `SwiftUI`.
 ///
 /// Usage:
 /// ```
 /// final class MyController: UIViewController {
-///   @Router var featureRouter: MyFeatureRouter
-///   @Router(searchParents: true) var appRouter: AppRouter
+///   @Router var appRouter: AppRouter
+///   @Router(searchParents: false) var featureRouter: MyFeatureRouter
 ///
 ///   func done() {
 ///     featureRouter.go(to: .nextStep)
@@ -75,7 +75,7 @@ public struct Router<Routable> where Routable: Routing {
     private var searchParents: Bool
 
     /// Declares a new ``Routing`` accessor in a given ``UIViewController``.
-    /// - Parameter searchParents: A flag indicating if the routers should be search for in parent controllers if not attached to the declaring controller. Defaults to `true`.
+    /// - Parameter searchParents: A flag indicating if the routers should be searched for in parent controllers if not attached to the declaring controller. Defaults to `true`.
     public init(searchParents: Bool = true) {
         self.searchParents = searchParents
     }
