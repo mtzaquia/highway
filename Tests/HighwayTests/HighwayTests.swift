@@ -30,7 +30,6 @@ final class HighwayTests: XCTestCase {
     func testRouterInjection() throws {
         let controller = TestController()
         let router = TestRouter(rootViewController: controller)
-
         XCTAssertTrue(controller.testRouter === router)
     }
 }

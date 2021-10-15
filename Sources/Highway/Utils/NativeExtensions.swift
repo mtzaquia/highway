@@ -38,7 +38,7 @@ public extension UIViewController {
     /// Finds the top-most view controller in a given hierarchy, starting from `self`.
     /// - Returns: The top-most view controller in the hierarchy, or `self`.
     func topMostViewController() -> UIViewController {
-        if let presented = self.presentedViewController {
+        if let presented = presentedViewController {
             return presented.topMostViewController()
         }
 
