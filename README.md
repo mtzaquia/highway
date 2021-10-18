@@ -94,10 +94,10 @@ final class MyController: UIViewController {
 }
 ```
 
-By default, the `@Router` property wrapper will look search for the parent controllers until a router matching the proposed type is found. If you would like to prevent this behaviour, set the `searchParents` property to `false`.
+By default, the `@Router` property wrapper will look for the parent controllers until a router matching the proposed type is found. If you would like to prevent this behaviour, set the `searchParents` property to `false`.
 
 ```swift
-// Declaring the property to access our custom router instance. We will not look for the controller parents, so this will only work if there's a valid `AppRouting` instance attached to the view controller declaring this property.
+// This requires a valid `AppRouting` instance to be attached to the view controller declaring this property.
 @Router(searchParents: false) var appRouter: AppRouting
 ```
 
