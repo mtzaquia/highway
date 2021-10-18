@@ -35,8 +35,17 @@ public protocol Routing: ObservableObject {
 
     /// The type declaring all available routes for this instance. Typically, this would be an `enum` with cases for each possible route you'd like to perform.
     associatedtype Route
-
     /// A function that will route the current context towards a specific path, or route.
     /// - Parameter route:The route to be used for this particular action.
     func go(to route: Route)
+
+    /// The type declaring all available destinations for this instance. Typically, this would be an `enum` with cases for each possible destination you'd like to return from.
+    associatedtype Destination
+    /// A function that will return from the current destination towards a specific context.
+    /// - Parameter destination:The destination you'd like to return from on this particular action.
+    func complete(_ destination: Destination)
+}
+
+public extension Routing {
+    func complete(_ destination: Never) {}
 }
