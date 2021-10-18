@@ -19,7 +19,101 @@ dependencies: [
 
 ## Usage
 
-_TBA..._
+### Creating a router
+
+Simply start by creating an object that conforms to `Routing`.
+
+```swift
+final class AppRouting: Routing {
+    var rootViewController: UINavigationController
+
+    init(rootViewController: UINavigationController) {
+        self.rootViewController = rootViewController
+        rootViewController.routing(self)
+    }
+}
+
+// Defining `Route` and finishing the requirements from the protocol in an extension for readability.
+extension AppRouting {
+    enum Route {
+        case home
+        case detail(_: String)
+    }
+
+    func go(to route: Route) {
+        switch route {
+        case .home: rootViewController.popToRootViewController(animated: true)
+        case let .detail(text):
+            rootViewController.pushViewController(MyDetailController(text: text), animated: true)
+        }
+    }
+}
+```
+
+### Completing
+
+If you'd like to use the router for going back (i.e.: when the work on a destination is completed), define the `Destination` type and implement the `complete(_:)` method in your entity, too.
+
+```swift
+extension AppRouting {
+    enum Destination {
+        case detail(_: String)
+    }
+
+    func complete(_ destination: Destination) {
+        switch destination {
+        case let .detail(choice):
+            rootViewController.popToRootViewController(animated: true)
+            (rootViewController.viewControllers.first as? MyController)?.choice = choice
+        }
+    }
+}
+``` 
+
+_**Attention:** By default, the complete method is provided with no destinations for convenience._
+
+### Using the router in your app
+
+It is important to attach your router to a view controller in the hierarchy so that you can retrieve it later. The simplest way is to call `UIVIewController.routing(_:)`. This can be conveniently done in the initialisation of the custom router type. See the [Creating a router](#creating-a-router) code snippet.
+
+Once registered, you can fetch your registered routers using the property wrapper `@Router`. It works similarly to `@EnvironmentObject`, retrieving the instance registered with the matching type.
+
+```swift
+final class MyController: UIViewController {
+    // Declaring the property to access our custom router instance.
+    @Router var appRouter: AppRouting
+    
+    // ...
+    
+    func showDetail(_ text: String) {
+        // Going to the detail screen using our router.
+        appRouter.go(to: .detail(text))
+    }
+}
+```
+
+By default, the `@Router` property wrapper will look search for the parent controllers until a router matching the proposed type is found. If you would like to prevent this behaviour, set the `searchParents` property to `false`.
+
+```swift
+// Declaring the property to access our custom router instance. We will not look for the controller parents, so this will only work if there's a valid `AppRouting` instance attached to the view controller declaring this property.
+@Router(searchParents: false) var appRouter: AppRouting
+```
+
+### Going back
+
+If you are also using routers to go back, simply call `complete(_:)` whenever you are done.
+
+```swift
+final class MyDetailController: UIViewController {
+    @Router var appRouter: AppRouting
+    
+    // ...
+    
+    func didSelect(_ choice: String) {
+        appRouter.complete(.detail(choice))
+    }
+}
+```
 
 ## License
 
