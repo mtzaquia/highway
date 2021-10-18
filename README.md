@@ -29,6 +29,8 @@ final class AppRouting: Routing {
 
     init(rootViewController: UINavigationController) {
         self.rootViewController = rootViewController
+        
+        // We are conveniently attaching the router to the hierarchy here.
         rootViewController.routing(self)
     }
 }
@@ -70,7 +72,7 @@ extension AppRouting {
 }
 ``` 
 
-_**Attention:** By default, the complete method is provided with no destinations for convenience._
+_**Attention:** By default, the `complete(_:)` method is provided with no destinations for convenience._
 
 ### Using the router in your app
 
