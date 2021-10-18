@@ -27,11 +27,15 @@ import UIKit
 
 public extension UIViewController {
     /// A chaining function to attach different ``Routing`` objects to this controller instance, similar to ``environmentObject(_:)`` on `SwiftUI`.
+    /// - Parameters:
+    ///   - router: The router to be attached to this view controller instance.
+    ///   - named: A name for this router, which can be used for lookup later. If not provided, the type of the router will be used as its name.
     /// - Returns: `self` with the newly ``Routing`` attached to it.
     @discardableResult
-    func routing<Router>(_ router: Router) -> Self where Router: Routing {
-        Logger.highway.info("Attached \(String(describing: router)) to \(String(describing: self)).")
-        routers[String(describing: Router.self)] = router
+    func routing<Router>(_ router: Router, named: String? = nil) -> Self where Router: Routing {
+        let resolvedName = named ?? String(String(describing: router).split(separator: ".").last ?? "")
+        Logger.highway.info("Attached \(String(describing: router)) to \(String(describing: self)) with name \(resolvedName).")
+        routers[resolvedName] = router
         return self
     }
 

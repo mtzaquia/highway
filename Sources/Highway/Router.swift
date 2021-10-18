@@ -47,12 +47,14 @@ public struct Router<Routable> where Routable: Routing {
     {
         get {
             var controller: UIViewController = instance
+            let nameForLookup = instance[keyPath: storageKeyPath].nameForLookup
+            let searchParents = instance[keyPath: storageKeyPath].searchParents
             while true {
-                if let targetRouter = controller.routers[String(describing: Routable.self)] as? Routable {
-                    Logger.highway.info("\(String(describing: targetRouter)) found for \(String(describing: instance)), attached to \(String(describing: controller)).")
+                if let targetRouter = controller.routers[nameForLookup] as? Routable {
+                    Logger.highway.info("\(String(describing: targetRouter)) found on \(String(describing: instance)) hierarchy with name \(nameForLookup).")
                     return targetRouter
                 } else {
-                    guard let parent = controller.parent, instance[keyPath: storageKeyPath].searchParents else {
+                    guard let parent = controller.parent, searchParents else {
                         break
                     }
 
@@ -72,11 +74,19 @@ public struct Router<Routable> where Routable: Routing {
         set { fatalError() }
     }
 
+    private var named: String?
     private var searchParents: Bool
 
     /// Declares a new ``Routing`` accessor in a given ``UIViewController``.
-    /// - Parameter searchParents: A flag indicating if the routers should be searched for in parent controllers if not attached to the declaring controller. Defaults to `true`.
-    public init(searchParents: Bool = true) {
+    /// - Parameters:
+    ///   - named: The name to be used for lookup.  If not provided, the type of the router will be used as the name for lookup.
+    ///   - searchParents: A flag indicating if the routers should be searched for in parent controllers if not attached to the declaring controller. Defaults to `true`.
+    public init(named: String? = nil, searchParents: Bool = true) {
+        self.named = named
         self.searchParents = searchParents
+    }
+
+    private var nameForLookup: String {
+        named ?? String(describing: Routable.self)
     }
 }
