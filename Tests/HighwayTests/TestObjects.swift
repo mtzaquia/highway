@@ -29,10 +29,10 @@ import UIKit
 // MARK: - TestRouter
 
 final class TestRouter: Routing {
-    let rootViewController: UIViewController
+    private(set) weak var rootViewController: UIViewController?
     init(rootViewController: UIViewController) {
         self.rootViewController = rootViewController
-        self.rootViewController.routing(self)
+        rootViewController.routing(self)
     }
 }
 

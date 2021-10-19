@@ -31,7 +31,8 @@ public protocol Routing: ObservableObject {
     /// The type of the root view controller for this particular instance.
     associatedtype Root: UIViewController
     /// The root view controller for this particular instance, from which presentations should be performed.
-    var rootViewController: Root { get }
+    /// Make sure to declare this property as `weak` in your definition to prevent retain cycles.
+    var rootViewController: Root? { get }
 
     /// The type declaring all available routes for this instance. Typically, this would be an `enum` with cases for each possible route you'd like to perform.
     associatedtype Route

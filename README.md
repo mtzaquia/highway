@@ -25,7 +25,7 @@ Simply start by creating an object that conforms to `Routing`.
 
 ```swift
 final class AppRouting: Routing {
-    var rootViewController: UINavigationController
+    private(set) weak var rootViewController: UINavigationController?
 
     init(rootViewController: UINavigationController) {
         self.rootViewController = rootViewController
@@ -44,9 +44,10 @@ extension AppRouting {
 
     func go(to route: Route) {
         switch route {
-        case .home: rootViewController.popToRootViewController(animated: true)
+        case .home: 
+            rootViewController?.popToRootViewController(animated: true)
         case let .detail(text):
-            rootViewController.pushViewController(MyDetailController(text: text), animated: true)
+            rootViewController?.pushViewController(MyDetailController(text: text), animated: true)
         }
     }
 }
@@ -65,8 +66,8 @@ extension AppRouting {
     func complete(_ destination: Destination) {
         switch destination {
         case let .detail(choice):
-            rootViewController.popToRootViewController(animated: true)
-            (rootViewController.viewControllers.first as? MyController)?.choice = choice
+            rootViewController?.popToRootViewController(animated: true)
+            (rootViewController?.viewControllers.first as? MyController)?.choice = choice
         }
     }
 }
