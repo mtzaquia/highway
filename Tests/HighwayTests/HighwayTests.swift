@@ -32,4 +32,24 @@ final class HighwayTests: XCTestCase {
         let router = TestRouter(rootViewController: controller)
         XCTAssertTrue(controller.testRouter === router)
     }
+
+    func testRouterRewiring() throws {
+        let controller = TestController()
+
+        let router = TestRouter(rootViewController: controller, registeringSelf: false)
+        let rewiredRouter = RewiredRouter(rootViewController: controller, registeringSelf: false)
+        let anotherRouter = AnotherRouter(rootViewController: controller, registeringSelf: false)
+
+        controller.routing(router, named: "Rewired")
+        XCTAssertFalse(controller.rewiredRouter is RewiredRouter)
+        XCTAssertFalse(controller.rewiredRouter is AnotherRouter)
+
+        controller.routing(rewiredRouter, named: "Rewired")
+        XCTAssertTrue(controller.rewiredRouter is RewiredRouter)
+        XCTAssertFalse(controller.rewiredRouter is AnotherRouter)
+
+        controller.routing(anotherRouter, named: "Rewired")
+        XCTAssertFalse(controller.rewiredRouter is RewiredRouter)
+        XCTAssertTrue(controller.rewiredRouter is AnotherRouter)
+    }
 }

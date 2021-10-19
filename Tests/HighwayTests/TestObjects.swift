@@ -28,18 +28,14 @@ import UIKit
 
 // MARK: - TestRouter
 
-final class TestRouter: Routing {
+class TestRouter: Routing {
     private(set) weak var rootViewController: UIViewController?
-    init(rootViewController: UIViewController) {
+    init(rootViewController: UIViewController, registeringSelf: Bool = true) {
         self.rootViewController = rootViewController
-        rootViewController.routing(self)
-    }
-}
 
-extension TestRouter {
-    enum Route {
-        case first
-        case second
+        if registeringSelf {
+            rootViewController.routing(self)
+        }
     }
 
     func go(to route: Route) {
@@ -50,8 +46,37 @@ extension TestRouter {
     }
 }
 
+extension TestRouter {
+    enum Route {
+        case first
+        case second
+    }
+}
+
 // MARK: - TestController
 
 final class TestController: UIViewController {
     @Router var testRouter: TestRouter
+    @Router(named: "Rewired") var rewiredRouter: TestRouter
 }
+
+// MARK: - Rewired routers
+
+final class RewiredRouter: TestRouter {
+    override func go(to route: Route) {
+        switch route {
+        case .first: print("First rewired route!")
+        case .second: print("Second rewired route!")
+        }
+    }
+}
+
+final class AnotherRouter: TestRouter {
+    override func go(to route: Route) {
+        switch route {
+        case .first: print("First another route!")
+        case .second: print("Second another route!")
+        }
+    }
+}
+
