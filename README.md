@@ -25,6 +25,7 @@ Simply start by creating an object that conforms to `Routing`.
 
 ```swift
 final class AppRouting: Routing {
+    // Since routers can be attached to controllers, prefer a weak reference.
     private(set) weak var rootViewController: UINavigationController?
 
     init(rootViewController: UINavigationController) {
